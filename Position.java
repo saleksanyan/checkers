@@ -1,3 +1,6 @@
+package Checkers.MainClasses;
+import java.util.ArrayList;
+
 public class Position {
     private int rank;
     private int file;
@@ -60,7 +63,11 @@ public class Position {
             int file = position.charAt(0) - 65;
             int rank = 56 - position.charAt(1);
             newObject = new Position(rank, file);
-        } else {
+        }else  if ('a' <= position.charAt(0) && position.charAt(0) <= 'h' && '1' <= position.charAt(1) && position.charAt(1) <= '8' && position.length() == 2) {
+            int file = position.charAt(0) - 97;
+            int rank = 56 - position.charAt(1);
+            newObject = new Position(rank, file);
+        }else {
             newObject = null;
         }
 
@@ -88,14 +95,14 @@ public class Position {
         finalArr[finalArr.length - 1] = p;
         return finalArr;
     }
-    public static Position[] appendPositionsToArray(Position[] arr, Position...arg) {
+    public static ArrayList<Position> appendPositionsToArray(ArrayList<Position> arr, Position...arg) {
 
-        Position[] result = new Position[arr.length + arg.length];
-        for (int i = 0; i < arr.length; i++) {
-            result[i] = arr[i];
+        ArrayList<Position> result = new ArrayList<>(0);
+        for (int i = 0; i < arr.size(); i++) {
+            result.add(i,arr.get(i));
         }
-        for (int i = 0, j = arr.length; i < arg.length; i++, j++) {
-            result[j] = arg[i];
+        for (int i = 0, j = arr.size(); i < arg.length; i++, j++) {
+            result.add(i,arg[i]);
         }
         return result;
     }
