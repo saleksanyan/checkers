@@ -1,4 +1,8 @@
-public class Piece {
+package Checkers.MainClasses;
+
+import java.util.ArrayList;
+
+public abstract class Piece {
 
     private Board.PieceColor color;
 
@@ -14,9 +18,7 @@ public class Piece {
     }
 
 
-    public Position[] allDestinations(Board chess, Position p){
-        return null;
-    }
+    public abstract ArrayList<Position> allDestinations(Board checkers, Position p);
 
 
 }
