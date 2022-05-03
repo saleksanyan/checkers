@@ -15,7 +15,8 @@ public class Board {
     private int numberOfMoves;
 
     public Board() {
-        this("p.p.p.p..p.p.p.pp.p.p.p..................P.P.P.PP.P.P.P..P.P.P.P.", PieceColor.WHITE);
+        this( "p.p.p.p..p.p.p.pk.p...P..k.P.p....k........P.P.PP.P...P..P.P.P.P", PieceColor.WHITE);
+        //"p.p.p.p..p.p.p.pp.p.p.p..................P.P.P.PP.P.P.P..P.P.P.P."
     }
 
     public Board(String pieceName, PieceColor color){
@@ -23,11 +24,17 @@ public class Board {
         for (int i = 0, l = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; l++, j++) {
                 switch (pieceName.charAt(l)) {
-                    case 'P', 'Q' -> {
+                    case 'P'-> {
                         board[i][j] = new Pawn(PieceColor.WHITE);
                     }
-                    case 'p', 'q' -> {
+                    case 'K'-> {
+                        board[i][j] = new King(PieceColor.WHITE);
+                    }
+                    case 'p' -> {
                         board[i][j] = new Pawn(PieceColor.BLACK);
+                    }
+                    case 'k' -> {
+                        board[i][j] = new King(PieceColor.BLACK);
                     }
 
                     case '.' -> board[i][j] = null;
@@ -72,7 +79,7 @@ public class Board {
 
 
 
-    public Piece getPieceAt(Position p) {
+    public  Piece getPieceAt(Position p) {
         return this.board[p.getRank()][p.getFile()];
     }
 
@@ -84,23 +91,66 @@ public class Board {
     }
 
 
-   public boolean performMove(Move m) {
-        Position origin = m.getOrigin();
-        Position destination = m.getDestination();
+//   public boolean performMove(Move m) {
+//        Position origin = m.getOrigin();
+//        Position destination = m.getDestination();
+//
+//       ArrayList<Position> reachable = this.reachableFrom(origin);
+//       if (this.getPieceAt(origin).getPieceColor() != this.getTurn())
+//           return false;
+//       for (Position position : reachable){
+//            if (destination.getRank() == position.getRank()
+//                    && destination.getFile() == position.getFile()) {
+//                this.board[destination.getRank()][destination.getFile()] =
+//                        this.board[origin.getRank()][origin.getFile()];
+//                this.board[origin.getRank()][origin.getFile()] = null;
+//                if(this.board[(origin.getRank() + destination.getRank()) / 2]
+//                        [(origin.getFile() + destination.getFile()) / 2] !=
+//                        this.board[destination.getRank()][destination.getFile()]){
+//                this.board[(origin.getRank() + destination.getRank()) / 2]
+//                        [(origin.getFile() + destination.getFile()) / 2] = null;
+//                }
+//                this.numberOfMoves++;
+//                return true;
+//            }
+//        }return false;
+//    }
 
-       ArrayList<Position> reachable = this.reachableFrom(origin);
+    public boolean performMove(Move m) {
+        Position o = m.getOrigin();
+        Position d = m.getDestination();
 
-        for (Position position : reachable)
-            if (destination.getRank() == position.getRank()
-                    && destination.getFile() == position.getFile()) {
-                this.board[destination.getRank()][destination.getFile()] =
-                        this.board[origin.getRank()][origin.getFile()];
-                this.board[origin.getRank()][origin.getFile()] = null;
+        if (this.getPieceAt(o).getPieceColor() != this.getTurn())
+            return false;
+
+        Position[] reachable = this.reachableFrom(o).toArray(new Position[0]);
+
+        for (int i = 0; i < reachable.length; i++)
+            if (d.getRank() == reachable[i].getRank()
+                    && d.getFile() == reachable[i].getFile()) {
+//                 int rank = o.getRank() + (d.getRank() - o.getRank())/2;
+//                 int file = o.getFile() + (d.getFile() - o.getFile())/2;
+//                 System.out.println(rank);
+//                 System.out.println(file);
+                this.board[d.getRank()][d.getFile()] = this.board[o.getRank()][o.getFile()];
+                this.board[o.getRank()][o.getFile()] = null;
+                for (int j = 1; j < Math.abs(o.getRank() - d.getRank()); j++) {
+                    if (o.getRank() > d.getRank() && d.getFile() > o.getFile()) {
+                        this.board[d.getRank() + j][d.getFile() - j] = null;
+                    }else if(o.getRank() > d.getRank() && d.getFile() < o.getFile()){
+                        this.board[d.getRank() + j][d.getFile() + j] = null;
+                    }else if(o.getRank() < d.getRank() && d.getFile() < o.getFile()){
+                        this.board[o.getRank() + j][o.getFile() - j] = null;
+                    }else if(o.getRank() < d.getRank() && d.getFile() > o.getFile()){
+                        this.board[o.getRank() + j][o.getFile() + j] = null;
+                    }
+                }
                 this.numberOfMoves++;
                 return true;
             }
-
         return false;
     }
+
+
 
 }
