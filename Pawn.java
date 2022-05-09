@@ -93,9 +93,6 @@ public class Pawn extends Piece{
             int file = p.getFile() + (p.getFile() - position.getFile());
             if(rank >= 0 && rank <= 7 && file >= 0 && file <= 7) {
                 pos = new Position(rank, file);
-//                if(positions.contains(pos)){
-//                    continue;
-//                }
                 boolean exists = false;
                 for(Position p1: positions){
                     if(pos.equalsTo(p1)){
@@ -114,5 +111,17 @@ public class Pawn extends Piece{
             }
         }
     }
+
+
+
+    public static String BecomeQueen(Board checkers, Position position) {
+        if(checkers.getTurn().equals(Board.PieceColor.WHITE) && position.getRank() == 0){
+            return "White";
+        }
+        else if(checkers.getTurn().equals(Board.PieceColor.BLACK) && position.getRank() == 7)
+            return "Black";
+        return "^_^";
+    }
+
 }
 
