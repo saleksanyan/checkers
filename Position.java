@@ -51,10 +51,7 @@ public class Position {
     }
 
     public String toString() {
-        char letter = (char)(65 + this.file);
-        char number = (char)(56 - this.rank);
-        String result = String.valueOf(letter + number);
-        return result;
+        return "" + (char)('A' + this.file) + (Board.BOARD_RANKS - this.rank);
     }
 
     public static Position generateFromString(String position) {
