@@ -1,5 +1,6 @@
 package Checkers.MainClasses;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Board {
@@ -15,11 +16,15 @@ public class Board {
     private int numberOfMoves;
 
     public Board() {
-        this( "p.p.p.p..p.p.p.pk.p...P..k.P.p....k........P.P.PP.P...P..P.P.P.P", PieceColor.WHITE);
+        this( "p...p.p..p.p.p.p..p...p..p.p.p.............p.pppp.p.........Q...");
+        //"p...p.p..p.p.p.p..p...P..p.P.p.............Q.P.PP.P...P..P.P.P.P"
+        //p.p.p.p..p.p.p.pp.p...P..P.P.p.............Q.P.PP.P...P..P.P.P.P
+        //"p.p.p.p..p.p.p.pp.p...P..q.P.p.............Q.P.PP.P...P..P.P.P.P"
         //"p.p.p.p..p.p.p.pp.p.p.p..................P.P.P.PP.P.P.P..P.P.P.P."
+        //"p...p.p..P.p.p.pp.p.p.p..................P.P.P.PP.P.P.P..P.P.P.P."
     }
 
-    public Board(String pieceName, PieceColor color){
+    public Board(String pieceName){
         this.board = new Piece[BOARD_RANKS][BOARD_FILES];
         for (int i = 0, l = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; l++, j++) {
@@ -27,14 +32,14 @@ public class Board {
                     case 'P'-> {
                         board[i][j] = new Pawn(PieceColor.WHITE);
                     }
-                    case 'K'-> {
-                        board[i][j] = new King(PieceColor.WHITE);
+                    case 'Q'-> {
+                        board[i][j] = new Queen(PieceColor.WHITE);
                     }
                     case 'p' -> {
                         board[i][j] = new Pawn(PieceColor.BLACK);
                     }
-                    case 'k' -> {
-                        board[i][j] = new King(PieceColor.BLACK);
+                    case 'q' -> {
+                        board[i][j] = new Queen(PieceColor.BLACK);
                     }
 
                     case '.' -> board[i][j] = null;
@@ -47,7 +52,9 @@ public class Board {
         }
     }
 
-
+    public void incNumberOfMoves(){
+        this.numberOfMoves++;
+    }
 
     public Piece[][] getBoard() {
         //returns deep copy
@@ -123,15 +130,24 @@ public class Board {
         if (this.getPieceAt(o).getPieceColor() != this.getTurn())
             return false;
 
-        Position[] reachable = this.reachableFrom(o).toArray(new Position[0]);
-
-        for (int i = 0; i < reachable.length; i++)
-            if (d.getRank() == reachable[i].getRank()
-                    && d.getFile() == reachable[i].getFile()) {
-//                 int rank = o.getRank() + (d.getRank() - o.getRank())/2;
-//                 int file = o.getFile() + (d.getFile() - o.getFile())/2;
-//                 System.out.println(rank);
-//                 System.out.println(file);
+        ArrayList<Position> reachable = this.reachableFrom(o);
+        if((Math.abs(o.getRank() - d.getRank()) > 2 || Math.abs(o.getFile() - d.getFile()) > 2)
+                && (!this.getPieceAt(o).toString().equals("Q") && !this.getPieceAt(o).toString().equals("q"))) {
+            return false;
+        }
+        for (int i = 0; i < reachable.size(); i++)
+            if (d.getRank() == reachable.get(i).getRank()
+                    && d.getFile() == reachable.get(i).getFile()) {
+                //                 int rank = o.getRank() + (d.getRank() - o.getRank())/2;
+                //                 int file = o.getFile() + (d.getFile() - o.getFile())/2;
+                //                 System.out.println(rank);
+                //                 System.out.println(file);
+                if(Pawn.BecomeQueen(this, d).equals("White")){
+                    this.board[o.getRank()][o.getFile()] = new Queen(PieceColor.WHITE);
+                }
+                else if(Pawn.BecomeQueen(this, d).equals("Black")) {
+                    this.board[o.getRank()][o.getFile()] = new Queen(PieceColor.BLACK);
+                }
                 this.board[d.getRank()][d.getFile()] = this.board[o.getRank()][o.getFile()];
                 this.board[o.getRank()][o.getFile()] = null;
                 for (int j = 1; j < Math.abs(o.getRank() - d.getRank()); j++) {
@@ -145,9 +161,9 @@ public class Board {
                         this.board[o.getRank() + j][o.getFile() + j] = null;
                     }
                 }
-                this.numberOfMoves++;
                 return true;
             }
+
         return false;
     }
 
