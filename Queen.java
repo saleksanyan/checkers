@@ -77,9 +77,12 @@ public class Queen extends Piece {
                     && file1 >= 0 && file1 < 7) {
                 newPosition = new Position(rank1, file1);
 
-                if (!checkers.isEmpty(newPosition) &&
-                        checkers.getPieceAt(newPosition).getPieceColor() != checkers.getTurn()) {
-                    positions.add(newPosition);
+                if (!checkers.isEmpty(newPosition)){
+                    if(checkers.getPieceAt(newPosition).getPieceColor() != checkers.getTurn()) {
+                        positions.add(newPosition);
+                    }else{
+                        break;
+                    }
                 }
                 rank1 += rank[i];
                 file1 += file[i];
