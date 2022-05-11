@@ -1,6 +1,9 @@
 package Checkers.GameBoard;
 import Checkers.MainClasses.*;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,22 +53,14 @@ public class GameBody {
                     System.out.println("Invalid move quantity. Please try again.");
                     continue;
                 }
-                if (p1 == null || game.getPieceAt(p1) == null) {
-                    System.out.println("Invalid position. Please try again.");
+
+                if (game.getPieceAt(p1).getPieceColor() != game.getTurn()) {
+                    System.out.println("That piece belongs to the opponent.");
                     continue;
                 }
-
                 if (input.size() == 1) {
-                    // Players are informed about wrong turns, but the squares for
-                    // the opponent's piece are still highlighted
-                    if (game.getPieceAt(p1).getPieceColor() != game.getTurn())
-                        System.out.println("That piece belongs to the opponent.");
                     print(p1);
                 } else if (input.size() > 1) {
-                    if (game.getPieceAt(p1).getPieceColor() != game.getTurn()) {
-                        System.out.println("That piece belongs to the opponent.");
-                        continue;
-                    }
 
                     for(int i=1; i<input.size(); i++) {
                         p1 = Position.generateFromString(input.get(i-1));
@@ -86,9 +81,11 @@ public class GameBody {
                     print();
                     if(end(game) == 1){
                         System.out.println("White won ^^");
+                        playMusic();
                         return;
                     }else if(end(game) == -1){
                         System.out.println("Black won ^^");
+                        playMusic();
                         return;
                     }
                 }
@@ -146,7 +143,17 @@ public class GameBody {
         print(null);
     }
 
-
+    public static void playMusic(){
+        File lol = new File("music.wav");
+        try{
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(lol));
+            clip.start();
+            Thread.sleep(clip.getMicrosecondLength()/100);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     public static int end(Board board){
         int blackCount = 0;
         int whiteCount = 0;
