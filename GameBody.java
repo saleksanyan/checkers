@@ -32,7 +32,24 @@ public class GameBody {
 
             if (input.size() >= 1) {
                 p1 = Position.generateFromString(input.get(0));
-
+                ArrayList<Position> positions = game.reachableFrom(p1);
+                int count = 0;
+                if (p1 == null || game.getPieceAt(p1) == null) {
+                    System.out.println("Invalid position. Please try again.");
+                    continue;
+                }
+                for (int i = 0; i < input.size(); i++) {
+                    for (int j = 0; j < positions.size(); j++) {
+                        if (Position.generateFromString(input.get(i)).toString().equals(positions.get(j).toString())) {
+                            count++;
+                            break;
+                        }
+                    }
+                }
+                if (count != input.size() - 1) {
+                    System.out.println("Invalid move quantity. Please try again.");
+                    continue;
+                }
                 if (p1 == null || game.getPieceAt(p1) == null) {
                     System.out.println("Invalid position. Please try again.");
                     continue;
@@ -55,7 +72,7 @@ public class GameBody {
                         p2 = Position.generateFromString(input.get(i));
 
                         if (p1 == null || p2 == null) {
-                            System.out.println("One of your positions is invalid. Please try again.");
+                            System.out.println(p1 + " " + p2 + " move is invalid. Please try again.");
                             break;
                         }
 
