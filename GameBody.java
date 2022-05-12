@@ -5,7 +5,6 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -22,7 +21,7 @@ public class GameBody {
 
         print();
 
-        while (!game.isGameOver()) {
+        while (true) {
             if (game.getTurn() == Board.PieceColor.WHITE)
                 System.out.println("White's move: ");
             else
@@ -41,9 +40,9 @@ public class GameBody {
                     System.out.println("Invalid position. Please try again.");
                     continue;
                 }
-                for (int i = 0; i < input.size(); i++) {
-                    for (int j = 0; j < positions.size(); j++) {
-                        if (Position.generateFromString(input.get(i)).toString().equals(positions.get(j).toString())) {
+                for (String s : input) {
+                    for (Position position : positions) {
+                        if (Position.generateFromString(s).toString().equals(position.toString())) {
                             count++;
                             break;
                         }
@@ -80,11 +79,11 @@ public class GameBody {
                     game.incNumberOfMoves();
                     print();
                     if(end(game) == 1){
-                        System.out.println("White won ^^");
+                        System.out.println("White won! (*≧▽≦)");
                         playMusic();
                         return;
                     }else if(end(game) == -1){
-                        System.out.println("Black won ^^");
+                        System.out.println("Black won! (*≧▽≦)");
                         playMusic();
                         return;
                     }
@@ -149,7 +148,6 @@ public class GameBody {
             Clip clip = AudioSystem.getClip();
             clip.open(AudioSystem.getAudioInputStream(lol));
             clip.start();
-            Thread.sleep(clip.getMicrosecondLength()/100);
         } catch (Exception e){
             e.printStackTrace();
         }
